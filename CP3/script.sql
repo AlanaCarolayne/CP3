@@ -1,0 +1,41 @@
+
+
+CREATE TABLE Usuario (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Nome VARCHAR(150) NOT NULL,
+    Email VARCHAR(150) NOT NULL UNIQUE,
+    Tipo VARCHAR(20) NOT NULL, 
+    DataCadastro DATETIME NOT NULL DEFAULT GETDATE()
+);
+
+CREATE TABLE Livro (
+    Isbn INT PRIMARY KEY,
+    Titulo VARCHAR(200) NOT NULL,
+    Autor VARCHAR(150) NOT NULL,
+    Categoria VARCHAR(100) NOT NULL,
+    Status VARCHAR(20) NOT NULL DEFAULT 'Disponivel', 
+    DataCadastro DATETIME NOT NULL DEFAULT GETDATE()
+);
+CREATE TABLE Emprestimo (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    UsuarioId INT NOT NULL,
+    LivroId INT NOT NULL,
+
+    DataEmprestimo DATETIME NOT NULL DEFAULT GETDATE(),
+    DataPrevista DATETIME NOT NULL,
+    DataDevolucaoReal DATETIME NULL,
+
+    Status VARCHAR(20) NOT NULL DEFAULT 'Ativo',
+
+    FOREIGN KEY (UsuarioId) REFERENCES Usuario(Id),
+    FOREIGN KEY (LivroId) REFERENCES Livro(Isbn)
+);
+CREATE TABLE Multa (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+
+    EmprestimoId INT NOT NULL UNIQUE,
+    ValorMulta DECIMAL(10,2) NOT NULL,
+    Status VARCHAR(20) NOT NULL DEFAULT 'Pendente',
+
+    FOREIGN KEY (EmprestimoId) REFERENCES Emprestimo(Id)
+);
